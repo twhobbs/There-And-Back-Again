@@ -1,0 +1,94 @@
+syntax = "proto2";
+
+package timhobbs.there_and_back_again;
+
+message Position
+{
+    required float lat = 1;
+    required float lng = 2;
+}
+
+message Polygon
+{
+    repeated Position positions = 1;
+}
+
+message TransportStatistics
+{
+    enum Type {
+        TOTAL = 1;
+        WORK_FROM_HOME = 2;
+        DRIVE = 3;
+        PASSENGER = 4;
+        BICYCLE = 5;
+        WALK = 6;
+        BUS = 7;
+        TRAIN = 8;
+        FERRY = 9;
+        OTHER = 10;
+    }
+    
+    required Type type = 1;
+
+    required int32 count = 2;
+}
+
+message TransitStatistics
+{
+    required int32 statisticalAreaId = 1;
+    
+    required bool isEducation = 2;
+
+    repeated TransportStatistics transportStatistics = 3;
+}
+
+message Bounds
+{
+    required float minLat = 1;
+    required float minLng = 2;
+    required float maxLat = 3;
+    required float maxLng = 4;
+}
+
+message StatisticalArea
+{
+    required int32 id = 1;
+    required string name = 2;
+    
+    required int32 clusterId = 3;
+    
+    repeated TransitStatistics inwardTravelStatistics = 4;
+    
+    required Position centroid = 5;
+    
+    required Bounds bounds = 6;
+}
+
+message StatisticalAreaPolygons
+{
+    required int32 statisticalAreaId = 1;
+    repeated Polygon polygons = 2;
+}
+
+message StatisticalAreaPolygonsCollection
+{
+    repeated StatisticalAreaPolygons statisticalAreaPolygons = 1;
+}
+
+message ClusterBounds
+{
+    required int32 clusterId = 1;
+    
+    required Bounds bounds = 2;
+}
+
+message AreaQuery
+{
+    repeated ClusterBounds clusterBounds = 1;
+}
+
+message CoreData
+{
+    repeated StatisticalArea statisticalAreas = 1;
+    required AreaQuery areaQuery = 2;
+}
